@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نمایش تاریخ امروز</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #date {
+            font-size: 24px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>تاریخ امروز:</h1>
+    <div id="date"></div>
+
+    <script>
+        // به‌دست‌آوردن تاریخ امروز
+        const today = new Date();
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const formattedDate = today.toLocaleDateString('fa-IR', options);
+
+        // نمایش تاریخ در عنصر مورد نظر
+        document.getElementById('date').textContent = formattedDate;
+    </script>
+    
+</body>
+</html>
