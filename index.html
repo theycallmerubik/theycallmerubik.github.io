@@ -19,7 +19,8 @@
         }
     </style>
     <!-- لینک به کتابخانه jalali-moment برای تبدیل تاریخ میلادی به شمسی -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jalali-moment/3.3.10/jalali-moment.browser.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-jalaali/0.10.4/moment-jalaali.js"></script>
 </head>
 <body>
 
@@ -43,29 +44,28 @@
         // نمایش تاریخ شمسی
         function showJalaliDate() {
             const today = moment();
-            const jalaliDate = today.locale('fa').format('YYYY/MM/DD');
+            const jalaliDate = today.format('jYYYY/jMM/jDD');
             document.getElementById('jalali-date').textContent = jalaliDate;
         }
 
         // نمایش ساعت به وقت تهران
         function showTime() {
-            const options = { timeZone: 'Asia/Tehran', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-            const now = new Intl.DateTimeFormat('fa-IR', options).format(new Date());
+            const now = moment().tz('Asia/Tehran').format('HH:mm:ss');
             document.getElementById('time').textContent = now;
         }
 
         // نمایش روز هفته (شروع هفته: شنبه)
         function showWeekday() {
             const daysOfWeek = ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه'];
-            const today = moment().locale('fa');
-            const dayIndex = today.day();  // 0 = شنبه, 1 = یکشنبه, ..., 6 = جمعه
+            const today = moment();
+            const dayIndex = today.jDay();  // 0 = شنبه, 1 = یکشنبه, ..., 6 = جمعه
             document.getElementById('weekday').textContent = daysOfWeek[dayIndex];
         }
 
         // تعیین هفته زوج یا فرد
         function showWeekType() {
             const today = moment();
-            const startOfYear = moment(today).startOf('year');
+            const startOfYear = moment(today).startOf('jYear');
             const weekNumber = today.diff(startOfYear, 'weeks') + 1;
             const weekType = (weekNumber % 2 === 0) ? 'زوج' : 'فرد';
             document.getElementById('week-type').textContent = `هفته ${weekType}`;
@@ -81,7 +81,7 @@
         }
 
         // اجرای توابع به‌صورت دوره‌ای
-        setInterval(update, 1000);
+        setInterval(update, 500);
     </script>
     
 </body>
