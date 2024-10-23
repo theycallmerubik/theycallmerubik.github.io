@@ -55,7 +55,7 @@
     
         // نمایش تاریخ شمسی
             document.getElementById('jalali-date').innerText = `${shamsiDate.jy}/${shamsiDate.jm}/${shamsiDate.jd}`;
-}
+        }
 
 
         // نمایش ساعت به وقت تهران
@@ -67,9 +67,13 @@
         // نمایش روز هفته (شروع هفته: شنبه)
         function showWeekday() {
             const daysOfWeek = ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه'];
-            const today = moment();
-            const dayIndex = today.jDay();  // 0 = شنبه, 1 = یکشنبه, ..., 6 = جمعه
-            document.getElementById('weekday').textContent = daysOfWeek[dayIndex];
+            const today = moment(); // Today in Gregorian format
+            const dayIndex = today.day(); // day() returns 0 for Sunday, 6 for Saturday
+
+        // Adjust day index for Persian calendar (Saturday is 0, not Sunday)
+            const persianDayIndex = (dayIndex + 1) % 7; // Shifts the days so Saturday = 0
+
+            document.getElementById('weekday').textContent = daysOfWeek[persianDayIndex];
         }
 
         // تعیین هفته زوج یا فرد
