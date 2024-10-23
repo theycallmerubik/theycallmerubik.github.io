@@ -82,7 +82,7 @@
             const startOfYear = moment(today).startOf('jYear');
             const weekNumber = today.diff(startOfYear, 'weeks') + 1;
             const weekType = (weekNumber % 2 === 0) ? 'زوج' : 'فرد';
-            document.getElementById('week-type').textContent = `هفته ${weekType}`;
+            document.getElementById('week-type').textContent = `${weekType}`;
         }
 
         // به روز رسانی داده‌ها در هر ثانیه
