@@ -20,7 +20,9 @@
     </style>
     <!-- لینک به کتابخانه jalali-moment برای تبدیل تاریخ میلادی به شمسی -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-jalaali/0.10.4/moment-jalaali.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jalaali-js/dist/jalaali.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jalaali-js/dist/jalaali.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
 </head>
 <body>
 
@@ -28,7 +30,7 @@
     <div id="container">
         <div class="item">تاریخ میلادی: <span id="gregorian-date"></span></div>
         <div class="item">تاریخ شمسی: <span id="jalali-date"></span></div>
-        <div class="item">ساعت به وقت تهران: <span id="time"></span></div>
+        <div class="item">ساعت: <span id="time"></span></div>
         <div class="item">روز هفته: <span id="weekday"></span></div>
         <div class="item">هفته: <span id="week-type"></span></div>
     </div>
@@ -41,12 +43,20 @@
             document.getElementById('gregorian-date').textContent = today.toLocaleDateString('en-US', options);
         }
 
-        // نمایش تاریخ شمسی
+        // نمایش تاریخ شمسی با استفاده از jalaali-js
         function showJalaliDate() {
-            const today = moment();
-            const jalaliDate = today.format('jYYYY/jMM/jDD');
-            document.getElementById('jalali-date').textContent = jalaliDate;
-        }
+            const today = new Date();
+            const gregorianYear = today.getFullYear();
+            const gregorianMonth = today.getMonth() + 1; // Months are zero-based in JS
+            const gregorianDay = today.getDate();
+    
+        // تبدیل به تاریخ شمسی
+            const shamsiDate = jalaali.toJalaali(gregorianYear, gregorianMonth, gregorianDay);
+    
+        // نمایش تاریخ شمسی
+            document.getElementById('jalali-date').innerText = `${shamsiDate.jy}/${shamsiDate.jm}/${shamsiDate.jd}`;
+}
+
 
         // نمایش ساعت به وقت تهران
         function showTime() {
