@@ -32,7 +32,7 @@
         <div class="item">تاریخ شمسی: <span id="jalali-date"></span></div>
         <div class="item">ساعت: <span id="time"></span></div>
         <div class="item">روز هفته: <span id="weekday"></span></div>
-        <div class="item">هفته: <span id="week-type"></span></div>
+        <div class="item"><span id="week-type"></span></div>
     </div>
 
     <script>
@@ -82,7 +82,7 @@
             const startOfYear = moment(today).startOf('jYear');
             const weekNumber = today.diff(startOfYear, 'weeks') + 1;
             const weekType = (weekNumber % 2 === 0) ? 'زوج' : 'فرد';
-            document.getElementById('week-type').textContent = `${weekType}`;
+            document.getElementById('week-type').textContent = `هفته ${weekType}`;
         }
 
         // به روز رسانی داده‌ها در هر ثانیه
