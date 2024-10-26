@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نمایش تاریخ و زمان</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #container {
+            margin-top: 20px;
+        }
+        .item {
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+    </style>
+    <!-- لینک به کتابخانه jalali-moment برای تبدیل تاریخ میلادی به شمسی -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jalaali-js/dist/jalaali.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jalaali-js/dist/jalaali.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
+</head>
+<body>
+
+    <h1>نمایش تاریخ و زمان</h1>
+    <div id="container">
+        <div class="item">تاریخ میلادی: <span id="gregorian-date"></span></div>
+        <div class="item">تاریخ شمسی: <span id="jalali-date"></span></div>
+        <div class="item">ساعت: <span id="time"></span></div>
+        <div class="item">روز هفته: <span id="weekday"></span></div>
+        <div class="item"><span id="week-type"></span></div>
+    </div>
+
+    <script>
+        // نمایش تاریخ میلادی
+        function showGregorianDate() {
+            const today = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('gregorian-date').textContent = today.toLocaleDateString('en-US', options);
+        }
+
+        // نمایش تاریخ شمسی با استفاده از jalaali-js
+        function showJalaliDate() {
+            const today = new Date();
+            const gregorianYear = today.getFullYear();
+            const gregorianMonth = today.getMonth() + 1; // Months are zero-based in JS
+            const gregorianDay = today.getDate();
+    
+        // تبدیل به تاریخ شمسی
+            const shamsiDate = jalaali.toJalaali(gregorianYear, gregorianMonth, gregorianDay);
+    
+        // نمایش تاریخ شمسی
+            document.getElementById('jalali-date').innerText = `${shamsiDate.jy}/${shamsiDate.jm}/${shamsiDate.jd}`;
+        }
+
+
+        // نمایش ساعت به وقت تهران
+        function showTime() {
+            const now = moment().tz('Asia/Tehran').format('HH:mm:ss');
+            document.getElementById('time').textContent = now;
+        }
+
+        // نمایش روز هفته (شروع هفته: شنبه)
+        function showWeekday() {
+            const daysOfWeek = ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه'];
+            const today = moment(); // Today in Gregorian format
+            const dayIndex = today.day(); // day() returns 0 for Sunday, 6 for Saturday
+
+        // Adjust day index for Persian calendar (Saturday is 0, not Sunday)
+            const persianDayIndex = (dayIndex + 1) % 7; // Shifts the days so Saturday = 0
+
+            document.getElementById('weekday').textContent = daysOfWeek[persianDayIndex];
+        }
+
+        // تعیین هفته زوج یا فرد
+        function showWeekType() {
+            const today = moment();
+            const startOfYear = moment(today).startOf('jYear');
+            const weekNumber = today.diff(startOfYear, 'weeks') + 1;
+            const weekType = (weekNumber % 2 === 0) ? 'زوج' : 'فرد';
+            document.getElementById('week-type').textContent = `هفته ${weekType}`;
+        }
+
+        // به روز رسانی داده‌ها در هر ثانیه
+        function update() {
+            showGregorianDate();
+            showJalaliDate();
+            showTime();
+            showWeekday();
+            showWeekType();
+        }
+
+        // اجرای توابع به‌صورت دوره‌ای
+        setInterval(update, 500);
+    </script>
+    
+</body>
+</html>
