@@ -4,100 +4,72 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نمایش تاریخ و زمان</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
-            background-color: wheat;
-        }
-        #container {
-            margin-top: 20px;
-        }
-        .item {
-            margin-bottom: 10px;
-            font-size: 20px;
-        }
-    </style>
+
+    <link rel="stylesheet" href="./Index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
     <!-- لینک به کتابخانه jalali-moment برای تبدیل تاریخ میلادی به شمسی -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jalaali-js/dist/jalaali.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jalaali-js/dist/jalaali.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.5.1/snap.svg-min.js"></script>
 </head>
 <body>
-
-    <h1>نمایش تاریخ و زمان</h1>
-    <div id="container">
-        <div class="item">تاریخ میلادی: <span id="gregorian-date"></span></div>
-        <div class="item">تاریخ شمسی: <span id="jalali-date"></span></div>
-        <div class="item">ساعت: <span id="time"></span></div>
-        <div class="item">روز هفته: <span id="weekday"></span></div>
-        <div class="item"><span id="week-type"></span></div>
+    
+    <div class="mode">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAApZJREFUSEvdlstLVVEUxn+WRRBok0QcNaphgmJPe1hQJBVJD4iCaBAUQfMGVtBfIBQ0CEdRUBCRFtILKy2pCIIGjcQggiYRRlmhuT9Y+7I99+xzjpcLF1wg3nP2Wevba61vf2vXUSOrqxEulQKvAk7YpvuBifkmUCnwduCpgW0DhhcE8FagAbifko2yfGbvtwAvUr7ZD3wHnqdVI1bqLmAAqAf2AI8TziuAVnv3HviRWN9lG/5n/mWtiAHvAB4CS4BfgAK9LNhH9f8BsAwQ8O6AD6UQWeTaC9wFfpvzSAAsvzX2/An4H6xtAoYMeJ9tomzPeaw+BHwGxsxTQc+7/qr/y+3dT8voMvAm+K7JNp5aqDzg0Ok0cAWiZ38GOOYqcbNIS4oCrwdGDXTaNuCZrOzPAIuAKSOdyp9pRYEFugEQqDbxNhFVLfDkEy965gMsGdSfN39MmoGv9rLPnc1zkaDXHR9OOg78BRot+/DYyW3cy2uY8SWgNwjqpTDMRmS7EwE+CtywtbUu6w9OSkNp1dJF1y7hzCFKDLgjYPVh4HYE+Ahwy9bagXdFgWOlVrkkfbKsUl8FxHyxWz6T9t8rXLTUWXx44jRXMipyrbNswu83ml6L2ZJaiU9VWK3SvQYWmwwqO4m/JFWgZ+04/XEa3QZ8rBaw4pwCrmUEVDWOV0tADgJf3JB4ZYCdTpcvuLJqiIR2z9iqIyjb7ERmZaWSGQ4JTSeJiLfVQIs9lM6mPWs+++mkGJpyZRZTrp3AILDUhEDAqQM9JaaA/XSShKb6xoB18AWsi0A38CgBkHcR0AwWuwWs32WzPEur1ScBKEDSilx9Drjh8Q0I53gpTtEhkQRemLfMLA2o2YU+T5hy1yvtcW7gvA9mAR63iR/zBrRXAAAAAElFTkSuQmCC" class="sun"/>
+        <button></button>
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAA6JJREFUSEvllluIHFUQhv863eCiYjQSMRp0Zae7ThNUkBVDQtC8uIoPugjqSxCJmJcoeIFIfNeoeAONiBJUxAtGUBEfzIuXgOIlcZGZ7tOdYQQNeCGwZgkx63DKOcPZZXYu6dlxQx6sp2Hq8lXXqVN1CGdI6AxxsSxwlmWbiGiztfbdJEl+/i9Jl4JFJMjz/B4A9wO4ysGI6P04ju84beCiKNZYaz8EsLETQkR74zjedlrAxphrAXwM4GIP+AvAKvdbRHZqrZ9acXCapuNBEBwUkQt88GeIaI+I1D34Nq31RysKLoriLGvtdwCu9JCtWuu3qtXq6jAMj3rYNDO7IxhZeprLGPMggGe7S1qv11c1m81ZT9rFzE+MTHUN2uncaDTG5ufnfwVwIYDvmdmd86IYY/4AsAbAl8x8/YqBjTFbAbzpAlprtyRJ8nkX+BUA97n/lFLroyiqjQpf8sVZlu0jotsB/MnMF3UHLYriGmvtD/7/F5nZ3e2RZAm4o5SvM7MbGj1ijPkEwC0ATiqltkRR9PUo5EWwP98Tvqke1Vo/2S9glmVXENFBAOe3ptnRIAg2VCqVw8uFL4KLolhnrf3Fg7dprfcOCmaMuRnAp14/a62d7u6HskQWwdVq9dwwDOe8w8PM3L5SgyTP8wdaA+YFrxcAe8IwfGxiYsJNuFLpbq7jRHR2azQ+x8wPlXlnWXYTEb3jy+7MTwL4ioi+sNY2lFKzIuIWy6Q7FqXUI1EUHXOG3c11AMAmADkzcxnY6Wu12togCFx17hrCfgczv9QDzrJsJxHt9gGuY+ZvhwjWNimKYoO11s2BO/0A6nFVSlWiKGrP+yVfXKvVLg+CwCkCEflMaz01LLjTzq/TS0RkLRG91xrB57UquZ+Zb1yw6zerXwPQ3rWtbdReEKPAnY8xxi2SW73/ksXSA67X65c1m82ffJYniGhjHMc/LhdujLkXwKveb38cx1NE5Lq/LX2fPmmaTiml3D1VAP4GsCuO4+c7HQclMjMzc87Y2JhrtvZMB/C7tXZ9kiQLK3Uw2GnyPN8uIi93JHfANc+pHnnGmM0A3gawzkOPKaWmoij6pjvRUz720jS9QSn1AYDV3tGV6ggRHXb3lIh+AzAuIuNEVPErc4ExIyLTWutGv+qUvjJdh4rIbhFxS6PUHsBxAI/Pzc09PTk5+c+gIxkmUNvXGHM1gLtbM8M9ay/tE/AQgH0A3mDmI2XNODS4LNBy9f8/8L8lnmAula6L5wAAAABJRU5ErkJggg==" class="moon"/>
     </div>
 
-    <script>
-        // نمایش تاریخ میلادی
-        function showGregorianDate() {
-            const today = new Date();
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('gregorian-date').textContent = today.toLocaleDateString('en-US', options);
-        }
-
-        // نمایش تاریخ شمسی با استفاده از jalaali-js
-        function showJalaliDate() {
-            const today = new Date();
-            const gregorianYear = today.getFullYear();
-            const gregorianMonth = today.getMonth() + 1; // Months are zero-based in JS
-            const gregorianDay = today.getDate();
+    <div id="container">
+        <div>
+            <div class="item"><span id="weekday"></span></div>
+            <div class="item"><span id="week-type"></span></div>
+        </div>
+        <div>
+            <div class="item"><span id="date"></span></div>
+            <button class="swap"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAAlZJREFUSEvFljtoFVEQhr8ovlAUjUW6mNhoxMZOtIiSNAkiJqQJvhoFUbAQLGwUIYIgWighhISANhYKIipWURAhFqI2YiFaiUJQE7HwgY/zwxwY474XbhYu3HN3z3xn/pn59zYxT1fTPHGpC14CrAHel02gDngRcBc4BzxsFDhCu4EdjQJ7qBJtCFjQW0CPk/Y+cAl4APwsKnnZGp8Ogc+kBJ+2el8GfuUdoAh4FTBrgZZaQ+3MCPwI2AN8zILngZcBCjQFHLNAGqE7QJet+4PUOtxJYIP9Nmn3/6TB88DnLaD27weuJcBjcy0GJoBBe0ZlOVsFvNqMQRm+BjYD31ygmPmQGyeV4inQYY0mc/maBM/KeB9wFZBcW4EnCQEEXwu8c/ck/Q1bD7jv/2zPAo+GgIeAl8CmvC519yX5J2A5MAwcLZuxGqgXeAxsLwHWo5J7S/jcBnZXBb8CNjYSHKX+bbL5xso6R22p97rxOQKMOFpLWOvzPOEEfWECbtrvKtW9slJrFD4A8me5UDvwxYKsC7V7Zi8ID/fjJAvV4aTYf1eegVwATtiu68AB4Acg8FvgMyD7jPA4gtqiiRirYiDas8KCrrcAajQZhkZMnatrJhhIZ/DnF7a+EhysNdzfldUIeRlrr+SSIWxzgSTfAreem/lKV5ZEfhGwNi4Msh4PMp8CmlMyuejKkjt9RcExkEZFLwV17mEXfdxqmvo2mnuSsuC4vy28rd7YQn5+0Dw9N9P4QF1wJajgdcD6C1Q607oZyyi+l5XX16FqxoVrWdVAagPSAvwFVCZuH5z6n/YAAAAASUVORK5CYII="/></button>
+        </div>
+    </div>
     
-        // تبدیل به تاریخ شمسی
-            const shamsiDate = jalaali.toJalaali(gregorianYear, gregorianMonth, gregorianDay);
-    
-        // نمایش تاریخ شمسی
-            document.getElementById('jalali-date').innerText = `${shamsiDate.jy}/${shamsiDate.jm}/${shamsiDate.jd}`;
-        }
-
-
-        // نمایش ساعت به وقت تهران
-        function showTime() {
-            const now = moment().tz('Asia/Tehran').format('HH:mm:ss');
-            document.getElementById('time').textContent = now;
-        }
-
-        // نمایش روز هفته (شروع هفته: شنبه)
-        function showWeekday() {
-            const daysOfWeek = ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه'];
-            const today = moment(); // Today in Gregorian format
-            const dayIndex = today.day(); // day() returns 0 for Sunday, 6 for Saturday
-
-        // Adjust day index for Persian calendar (Saturday is 0, not Sunday)
-            const persianDayIndex = (dayIndex + 1) % 7; // Shifts the days so Saturday = 0
-
-            document.getElementById('weekday').textContent = daysOfWeek[persianDayIndex];
-        }
-
-        // تعیین هفته زوج یا فرد
-        function showWeekType() {
-            const today = moment();
-            const startOfYear = moment(today).startOf('jYear');
-            const weekNumber = today.diff(startOfYear, 'weeks') + 1;
-            const weekType = (weekNumber % 2 === 0) ? 'زوج' : 'فرد';
-            document.getElementById('week-type').textContent = `هفته ${weekType}`;
-        }
-
-        // به روز رسانی داده‌ها در هر ثانیه
-        function update() {
-            showGregorianDate();
-            showJalaliDate();
-            showTime();
-            showWeekday();
-            showWeekType();
-        }
-
-        // اجرای توابع به‌صورت دوره‌ای
-        setInterval(update, 500);
-    </script>
-    
+    <div class="wrapper">
+        <svg version="1.1" id="clock" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 142 142" enable-background="new 0 0 142 142" xml:space="preserve">
+            <clipPath id="c1"><path d="M105.8,11C100.1,7.7,94,5.3,87.9,3.7c-0.5-0.2-0.9-0.3-1.3-0.3c-3.6-0.6-7.3,1.1-9.2,4.5
+            c-1.6,3-1.1,6.7,1,9.5c1.2,1.5,2.6,2.3,4.1,2.8c0.4,0.1,0.7,0.2,1,0.2c6.3,1.5,12.4,4.3,18,8.4c20.1,14.5,27,41.7,16.2,64.1
+            c-13.7,28.2-48.8,37.8-74.8,20.7C21.1,99.3,13.4,70.4,25.4,47.2c7.2-14.1,19.9-23.4,33.9-26.7c0.2,0,0.4-0.1,0.6-0.1
+            c2.5-0.7,4.7-2.6,5.7-5.3c1.3-3.4,0.1-7.4-2.7-9.8c-2.1-1.6-4.5-2.2-6.8-1.8c-0.5,0.1-1,0.2-1.5,0.3C36.8,8.2,20.6,19.8,10.9,37.5
+            c-18.1,33.1-5.9,75,27,93.4c32.8,18.3,74.2,6.9,93.1-25.7C150,72.1,138.8,30,105.8,11z" /></clipPath>
+            <clipPath id="c2"><path d="M95.1,103.7c16.6-12,21.6-34.8,11.7-52.7c-4.3-7.8-10.8-13.6-18.2-17.2c-0.1,0-0.2-0.1-0.3-0.1
+                c0,0-0.1-0.1-0.1,0c-2.9-1.3-6.3-0.9-9,1.5s-3.4,6.2-1.9,9.6c0.9,1.9,2.3,3.4,4.1,4.2c0.1,0.1,0.1,0,0.2,0.1l0,0
+                c4,1.9,7.6,5,10.1,9c7.1,11.4,3.2,27-8.5,33.6c-11.7,6.7-26.9,2.4-33.3-9.9c-4.4-8.7-3.1-19.4,3.2-26.8c2.3-2.6,4.8-4.5,7.6-5.9
+                c0,0,0,0,0.1-0.1l0.1-0.1c0.3-0.2,0.4-0.3,0.7-0.4c3.9-2.4,5.1-7.5,2.7-11.4c-2.3-3.7-6.8-4.9-10.6-3.2c-0.1,0.1-0.2,0.1-0.3,0.2
+                c-1.2,0.6-2.4,1.3-3.6,2c-19.1,11.9-24.9,37-13,56.1C49,112.1,75.7,117.6,95.1,103.7z" /></clipPath>
+            <text class="displayH f1" x="71" y="75" text-anchor="middle" style="font-size: 10px">00</text>
+            <g id="handH">
+                <ellipse class="f1" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -29.0876 71.0443)" cx="71.2" cy="70.6" rx="13.4" ry="13.3" />
+                <text id="handTextH" class="displayH f2" x="71" y="75" text-anchor="middle" style="font-size: 10px">00</text>
+            </g>
+            <text class="displayM f1" x="103.5" y="75" text-anchor="middle" style="font-size: 10px">00</text>
+            <g id="handM" clip-path="url(#c2)">
+                <circle class="f1 circleM" cx="50%" cy="50%" r="71" />
+                <text id="handTextM" class="displayM f2" x="103.5" y="75" text-anchor="middle" style="font-size: 10px">00</text>
+            </g>
+            <text class="displayS f1" x="131.5" y="75" text-anchor="middle" style="font-size: 10px">00</text>
+            <g id="handS" clip-path="url(#c1)">
+                <circle class="f1 circleS" cx="50%" cy="50%" r="71" />
+                <text id="handTextS" class="displayS f2" x="131.5" y="75" text-anchor="middle" style="font-size: 10px">00</text>
+            </g>
+        </svg>
+    </div>
+        
+    <footer class="credits">
+        <a href="https://t.me/Ru_Bic">Rubik</a>
+        -
+        <a href="https://t.me/Icy_Tick">Icy</a>
+    </footer>
+    <script src="./Index.js"></script>    
 </body>
 </html>
