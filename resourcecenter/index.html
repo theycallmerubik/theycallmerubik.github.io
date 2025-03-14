@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resource Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.3.1/dist/jsQR.min.js"></script>
+    <style>
+      :where([class^="ri-"])::before { content: "\f3c2"; }
+      body { max-width: 1440px; margin: 0 auto; min-width: 375px; }
+      .hide-scrollbar::-webkit-scrollbar { display: none; }
+      @media (max-width: 375px) {
+      body { width: 375px; }
+      }
+    </style>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { primary: "#3176FF", secondary: "#6366F1" },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+          },
+        },
+      };
+    </script>
+
+  </head>
+  <body class="bg-white">
+    <nav class="fixed top-0 w-full bg-white z-50 border-b">
+      <div class="px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <img src="https://public.readdy.ai/ai/img_res/29693e786b1284cf77a3f10cef119a8d.jpg" class="w-8 h-8 rounded">
+          <div class="font-['Pacifico'] text-xl text-primary">Telfon resource center</div>
+        </div>
+        <div class="flex items-center gap-4">
+          <button
+            onclick="toggleQRDialog()"
+            class="w-8 h-8 flex items-center justify-center text-primary hover:bg-gray-100 rounded-full">
+            <i class="ri-qr-code-line text-lg"></i>
+          </button>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              id="themeToggle"
+              class="sr-only peer"
+              onchange="toggleTheme()"
+            />
+            <div
+              class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary flex items-center justify-between px-1"
+            >
+              <i class="ri-sun-line text-xs text-yellow-500"></i>
+              <i class="ri-moon-line text-xs text-gray-400"></i>
+            </div>
+          </label>
+        </div>
+      </div>
+      <div
+        id="qrDialog"
+        class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center"
+      >
+        <div class="bg-white rounded-lg p-6 w-[320px] relative">
+          <div id="toggleQRMode" class="flex bg-gray-200 p-1 rounded-full mb-6 relative">
+            <button
+              id="createModeBtn"
+              onclick="switchQRMode('create')"
+              class="flex-1 py-2 px-4 text-sm rounded-full text-gray-600 relative z-10"
+            >
+              Create
+            </button>
+            <button
+              id="scanModeBtn"
+              onclick="switchQRMode('scan')"
+              class="flex-1 py-2 px-4 text-sm rounded-full text-gray-600 relative z-10"
+            >
+              Scan
+            </button>
+            <div
+              id="switchIndicator"
+              class="absolute top-1 left-1 w-[calc(50%-4px)] h-[calc(100%-8px)] bg-white rounded-full shadow transition-transform duration-300 ease-in-out z-0"
+            ></div>
+          </div>
+          <div id="createQRMode">
+            <div class=" pb-3">
+              <div class="relative">
+              <input id="qrInput" type="text" placeholder="Enter text or URL" class="w-full h-10 bg-gray-200 rounded-full pl-10 pr-4 text-sm border-none">
+                <div class="absolute left-3 top-0 w-5 h-10 flex items-center justify-center">
+                <i class="ri-text-snippet text-gray-400"></i>
+                </div>
+              </div>
+            </div>
+            <div
+              id="qrResult"
+              class="w-full h-[200px] bg-white rounded-lg mb-4 flex items-center justify-center"
+            >
+              <p class="text-gray-400 text-sm">QR code will appear here</p>
+            </div>
+            <button id="generateqrbutton"
+              onclick="generateQR()"
+              class="w-full bg-primary text-white py-2 rounded-lg text-sm hover:bg-primary/90 mb-4">
+              Generate QR Code
+            </button>
+            <button
+              onclick="toggleQRDialog()"
+              class="w-10 h-10 mx-auto flex items-center justify-center bg-gray-200 rounded-full hover:bg-gray-200"
+            >
+              <i class="ri-close-line text-xl text-gray-500"></i>
+            </button>
+          </div>
+          <div id="scanQRMode" class="hidden">
+            <div
+              class="w-full h-[200px] bg-white rounded-lg mb-4 flex items-center justify-center">
+              <input
+                type="file"
+                id="qrFileInput"
+                accept="image/*"
+                class="hidden"
+                onchange="scanQR(event)"
+              />
+              <label for="qrFileInput" class="cursor-pointer text-center">
+                <i
+                  class="ri-upload-cloud-2-line text-4xl text-gray-400 mb-2"
+                ></i>
+                <p class="text-sm text-gray-500">Upload QR Code Image</p>
+              </label>
+            </div>
+            <div id="scanResult" class="mb-4 p-3 bg-gray-200 rounded-lg text-sm text-gray-500 min-h-[44px] break-all">
+              Scan result will appear here
+            </div>
+            <button id="copyButton" class="w-full bg-primary text-white py-2 rounded-lg text-sm hover:bg-primary/90 mb-4" style="display: none;">
+              Copy
+            </button>
+            <button onclick="toggleQRDialog()" class="w-10 h-10 mx-auto flex items-center justify-center bg-gray-200 rounded-full hover:bg-gray-200">
+            <i class="ri-close-line text-xl text-gray-500"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <script>
+        function toggleQRDialog() {
+          const dialog = document.getElementById("qrDialog");
+          dialog.classList.toggle("hidden");
+        }
+        function switchQRMode(mode) {
+          const createMode = document.getElementById("createQRMode");
+          const scanMode = document.getElementById("scanQRMode");
+          const createBtn = document.getElementById("createModeBtn");
+          const scanBtn = document.getElementById("scanModeBtn");
+          const indicator = document.getElementById("switchIndicator");
+          if (mode === "create") {
+            createMode.classList.remove("hidden");
+            scanMode.classList.add("hidden");
+            createBtn.classList.add("text-gray-800");
+            createBtn.classList.remove("text-gray-600");
+            scanBtn.classList.remove("text-gray-800");
+            scanBtn.classList.add("text-gray-600");
+            indicator.style.transform = "translateX(0)";
+          } else {
+            createMode.classList.add("hidden");
+            scanMode.classList.remove("hidden");
+            scanBtn.classList.add("text-gray-800");
+            scanBtn.classList.remove("text-gray-600");
+            createBtn.classList.remove("text-gray-800");
+            createBtn.classList.add("text-gray-600");
+            indicator.style.transform = "translateX(100%)";
+          }
+          // Remove any existing white backgrounds
+          document.querySelectorAll("#createModeBtn, #scanModeBtn").forEach((btn) => {
+            btn.classList.remove("bg-white", "shadow");
+          });
+        }
+        function generateQR() {
+          const input = document.getElementById('qrInput').value;
+          const qrResult = document.getElementById('qrResult');
+          if (!input) {
+            qrResult.innerHTML = '<p class="text-red-500 text-sm">Please enter some text</p>';
+            return;
+          }
+          qrResult.innerHTML = '';
+          new QRCode(qrResult, {
+          text: input,
+          width: 200,
+          height: 200
+          });
+        }
+        function scanQR(event) {
+          const file = event.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              const img = new Image();
+              img.src = e.target.result;
+              img.onload = function () {
+              const canvas = document.createElement('canvas');
+              const ctx = canvas.getContext('2d');
+              canvas.width = img.width;
+              canvas.height = img.height;
+              ctx.drawImage(img, 0, 0, img.width, img.height);
+              const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+              const code = jsQR(imageData.data, canvas.width, canvas.height);
+
+              function copyToClipboard() {
+                const scanResultText = code.data;
+                navigator.clipboard.writeText(scanResultText).then(function() {
+                  alert('Content copied to clipboard');
+                }).catch(function(error) {
+                  alert('Failed to copy text: ' + error);
+                });
+              }
+
+              document.getElementById('copyButton').addEventListener('click', copyToClipboard);
+              if (code) {
+                document.getElementById('scanResult').textContent = `Scanned Content: ${code.data}`;
+                document.getElementById('copyButton').style.display = 'inline-block';
+              } else {
+                document.getElementById('scanResult').textContent = 'No QR code found';
+                document.getElementById('copyButton').style.display = 'none';
+              }
+              };
+            };
+            reader.readAsDataURL(file);
+          }
+        }
+      </script>
+      <script>
+        function toggleTheme() {
+          const body = document.body;
+          const nav = document.querySelector("nav");
+          const inputs = document.querySelectorAll('input[type="text"]');
+          const cards = document.querySelectorAll(".rounded-lg");
+          const modal = document.querySelector("#downloadModal > div");
+          const buttons = document.querySelectorAll("button");
+          const qrResult = document.querySelector('#qrResult');
+          const scanResult = document.querySelector('#scanResult');
+          const toggleQRMode = document.querySelector('#toggleQRMode');
+          if (document.getElementById("themeToggle").checked) {
+            body.classList.replace("bg-white", "bg-gray-900");
+            nav.classList.replace("bg-white", "bg-gray-900");
+            nav.classList.replace("border-b", "border-b-gray-800");
+            qrResult.classList.replace('bg-white', 'bg-gray-800');
+            scanResult.classList.replace('bg-gray-200', 'bg-gray-700');
+            scanResult.classList.replace('text-gray-500','text-gray-300');
+            toggleQRMode.classList.replace('bg-gray-200', 'bg-gray-700');
+            inputs.forEach((input) => {
+              input.classList.replace("bg-gray-200", "bg-gray-700");
+              input.classList.add("text-white");
+            });
+            cards.forEach((card) => {
+              if (card.classList.contains("bg-white")) {
+                card.classList.replace("bg-white", "bg-gray-800");
+              }
+              if (!document.querySelector('#scanResult'))
+              card.classList.add("text-white");
+              const paragraph = card.querySelector("p");
+              if (paragraph)
+                paragraph.classList.replace("text-gray-500", "text-gray-400");
+              const heading = card.querySelector("h3");
+              if (heading) heading.classList.add("text-white");
+            });
+            buttons.forEach((button) => {
+              if (!button.classList.contains("bg-primary")) {
+                button.classList.add("text-gray-300");
+              }
+            });
+            if (modal) modal.classList.replace("bg-white", "bg-gray-800");
+          } else {
+            body.classList.replace("bg-gray-900", "bg-white");
+            nav.classList.replace("bg-gray-900", "bg-white");
+            nav.classList.replace("border-b-gray-800", "border-b");
+            qrResult.classList.replace('bg-gray-800', 'bg-white');
+            scanResult.classList.replace('bg-gray-700', 'bg-gray-200');
+            scanResult.classList.replace('bg-gray-700', 'bg-gray-200');
+            scanResult.classList.replace('text-gray-300','text-gray-500');
+            toggleQRMode.classList.replace('bg-gray-700', 'bg-gray-200');
+            inputs.forEach((input) => {
+              input.classList.replace("bg-gray-700", "bg-gray-200");
+              input.classList.remove("text-white");
+            });
+            cards.forEach((card) => {
+              if (card.classList.contains("bg-gray-800")) {
+                card.classList.replace("bg-gray-800", "bg-white");
+              }
+              if (!document.querySelector('#generateqrbutton'))
+                card.classList.remove("text-white");
+              const paragraph = card.querySelector("p");
+              if (paragraph)
+                paragraph.classList.replace("text-gray-400", "text-gray-500");
+              const heading = card.querySelector("h3");
+              if (heading) heading.classList.remove("text-white");
+            });
+            buttons.forEach((button) => {
+              if (!button.classList.contains("bg-primary")) {
+                button.classList.remove("text-gray-300");
+              }
+            });
+            if (modal) modal.classList.replace("bg-gray-800", "bg-white");
+          }
+        }
+      </script>
+      <div class="px-4 pb-3">
+        <div class="relative">
+          <input type="text" placeholder="Search resources..." class="w-full h-10 bg-gray-50 rounded-full pl-10 pr-4 text-sm border-none" oninput="filterApps(this.value)">
+          <div class="absolute left-3 top-0 w-5 h-10 flex items-center justify-center">
+          <i class="ri-search-line text-gray-400"></i>
+          </div>
+        </div>
+      </div>
+      <script>
+        function filterApps(searchText) {
+          const cards = document.querySelectorAll('.grid > div:not(#noResultsMessage)');
+          let hasMatch = false;
+          cards.forEach(card => {
+            const title = card.querySelector('h3').textContent.toLowerCase();
+            if (title.includes(searchText.toLowerCase())) {
+              card.style.display = 'block';
+              hasMatch = true;
+            } else {
+              card.style.display = 'none';
+            }
+          });
+          const existingMessage = document.getElementById('noResultsMessage');
+          if (existingMessage) {
+            existingMessage.remove();
+          }
+          if (!hasMatch && searchText.trim() !== '') {
+            const grid = document.querySelector('.grid');
+            const message = document.createElement('div');
+            message.id = 'noResultsMessage';
+            message.className = 'col-span-2 text-center py-8 text-gray-500';
+            message.textContent = 'No such app found';
+            grid.appendChild(message);
+          }
+        }
+        </script>
+    </nav>
+    <main class="pt-24 pb-20 px-4">
+      <div
+        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mt-6"
+      >
+        <div class="bg-white rounded-lg shadow p-4">
+          <img
+            src="https://public.readdy.ai/ai/img_res/75b92bd81bdb36503c0f98b48876913a.jpg"
+            class="w-16 h-16 mx-auto mb-3 rounded-xl"
+          />
+          <h3 class="text-sm font-medium mb-3">Photoshop CC 2025</h3>
+          <div class="flex gap-2">
+            <button
+              onclick="downloadResource('Photoshop CC 2025', 'android')"
+              class="flex-1 py-1.5 bg-primary text-white text-sm !rounded-button flex items-center justify-center gap-1"
+            >
+              <i class="ri-android-fill"></i>
+              <i class="ri-download-line"></i>
+            </button>
+            <button
+              onclick="downloadResource('Photoshop CC 2025', 'ios')"
+              class="flex-1 py-1.5 bg-primary text-white text-sm !rounded-button flex items-center justify-center gap-1"
+            >
+              <i class="ri-apple-fill"></i>
+              <i class="ri-download-line"></i>
+            </button>
+          </div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+          <img
+            src="https://public.readdy.ai/ai/img_res/b0cb36e370d764e3e32859372a6984d5.jpg"
+            class="w-16 h-16 mx-auto mb-3 rounded-xl"
+          />
+          <h3 class="text-sm font-medium mb-3">Figma Desktop</h3>
+          <div class="flex gap-2">
+            <button
+              onclick="downloadResource('Figma Desktop', 'android')"
+              class="flex-1 py-1.5 bg-primary text-white text-sm !rounded-button flex items-center justify-center gap-1"
+            >
+              <i class="ri-android-fill"></i>
+              <i class="ri-download-line"></i>
+            </button>
+            <button
+              onclick="downloadResource('Figma Desktop', 'ios')"
+              class="flex-1 py-1.5 bg-primary text-white text-sm !rounded-button flex items-center justify-center gap-1"
+            >
+              <i class="ri-apple-fill"></i>
+              <i class="ri-download-line"></i>
+            </button>
+          </div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+          <img
+            src="https://public.readdy.ai/ai/img_res/dce9b2344aab6bd60565e0f372f776f5.jpg"
+            class="w-16 h-16 mx-auto mb-3 rounded-xl"
+          />
+          <h3 class="text-sm font-medium mb-3">Sketch App</h3>
+          <div class="flex gap-2">
+            <button
+              onclick="downloadResource('Sketch App', 'android')"
+              class="flex-1 py-1.5 bg-primary text-white text-sm !rounded-button flex items-center justify-center gap-1"
+            >
+              <i class="ri-android-fill"></i>
+              <i class="ri-download-line"></i>
+            </button>
+            <button
+              onclick="downloadResource('Sketch App', 'ios')"
+              class="flex-1 py-1.5 bg-primary text-white text-sm !rounded-button flex items-center justify-center gap-1"
+            >
+              <i class="ri-apple-fill"></i>
+              <i class="ri-download-line"></i>
+            </button>
+          </div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+          <img
+            src="https://public.readdy.ai/ai/img_res/dce50641d5a6f20ee499a28ebc3640f1.jpg"
+            class="w-16 h-16 mx-auto mb-3 rounded-xl"
+          />
+          <h3 class="text-sm font-medium mb-3">VS Code</h3>
+          <div class="flex gap-2">
+            <button
+              onclick="downloadResource('VS Code', 'android')"
+              class="flex-1 py-1.5 bg-primary text-white text-sm !rounded-button flex items-center justify-center gap-1"
+            >
+              <i class="ri-android-fill"></i>
+              <i class="ri-download-line"></i>
+            </button>
+            <button
+              onclick="downloadResource('VS Code', 'ios')"
+              class="flex-1 py-1.5 bg-primary text-white text-sm !rounded-button flex items-center justify-center gap-1"
+            >
+              <i class="ri-apple-fill"></i>
+              <i class="ri-download-line"></i>
+            </button>
+          </div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+          <img
+            src="https://public.readdy.ai/ai/img_res/366ec0dc4a7dd1bcf03a7bcc24684b2d.jpg"
+            class="w-16 h-16 mx-auto mb-3 rounded-xl"
+          />
+          <h3 class="text-sm font-medium mb-3">Adobe XD</h3>
+          <div class="flex gap-2">
+            <button
+              onclick="downloadResource('Adobe XD', 'android')"
+              class="flex-1 py-1.5 bg-primary text-white text-sm !rounded-button flex items-center justify-center gap-1"
+            >
+              <i class="ri-android-fill"></i>
+              <i class="ri-download-line"></i>
+            </button>
+            <button
+              onclick="downloadResource('Adobe XD', 'ios')"
+              class="flex-1 py-1.5 bg-primary text-white text-sm !rounded-button flex items-center justify-center gap-1"
+            >
+              <i class="ri-apple-fill"></i>
+              <i class="ri-download-line"></i>
+            </button>
+          </div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4">
+          <img
+            src="https://public.readdy.ai/ai/img_res/2327239fac919714d841cc055a595b29.jpg"
+            class="w-16 h-16 mx-auto mb-3 rounded-xl"
+          />
+          <h3 class="text-sm font-medium mb-3">Sublime Text</h3>
+          <div class="flex gap-2">
+            <button
+              onclick="downloadResource('Sublime Text', 'android')"
+              class="flex-1 py-1.5 bg-primary text-white text-sm !rounded-button flex items-center justify-center gap-1"
+            >
+              <i class="ri-android-fill"></i>
+              <i class="ri-download-line"></i>
+            </button>
+            <button
+              onclick="downloadResource('Sublime Text', 'ios')"
+              class="flex-1 py-1.5 bg-primary text-white text-sm !rounded-button flex items-center justify-center gap-1"
+            >
+              <i class="ri-apple-fill"></i>
+              <i class="ri-download-line"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script>
+      function downloadResource(title, platform) {
+        const downloadLinks = {
+          "Photoshop CC 2025": {
+            android: "https://example.com/download/photoshop/android",
+            ios: "https://example.com/download/photoshop/ios",
+          },
+          "Figma Desktop": {
+            android: "https://example.com/download/figma/android",
+            ios: "https://example.com/download/figma/ios",
+          },
+          "Sketch App": {
+            android: "https://example.com/download/sketch/android",
+            ios: "https://example.com/download/sketch/ios",
+          },
+          "VS Code": {
+            android: "https://example.com/download/vscode/android",
+            ios: "https://example.com/download/vscode/ios",
+          },
+          "Adobe XD": {
+            android: "https://example.com/download/xd/android",
+            ios: "https://example.com/download/xd/ios",
+          },
+          "Sublime Text": {
+            android: "https://example.com/download/sublime/android",
+            ios: "https://example.com/download/sublime/ios",
+          },
+        };
+        if (downloadLinks[title] && downloadLinks[title][platform]) {
+          window.location.href = downloadLinks[title][platform];
+        }
+      }
+    </script>
+  </body>
+</html>
