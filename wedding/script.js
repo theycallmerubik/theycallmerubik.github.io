@@ -42,22 +42,55 @@
       document.querySelector('.guests-count').textContent = toPersianDigits(value) + ': تعداد انتخاب شده';
     });
 
-        // Handle radio button changes to show/hide guest count section
+    // Handle radio button changes to show/hide guest count section with animation
     document.querySelectorAll('input[name="attendance"]').forEach(radio => {
       radio.addEventListener('change', function() {
         const guestsSection = document.querySelector('.guests-section');
+        
         if (this.value === 'not-attending') {
-          guestsSection.style.display = 'none';
+          // Start collapse animation
+          guestsSection.classList.add('collapsing');
+          
+          // Get the height before collapsing
+          const height = guestsSection.offsetHeight;
+          
+          // Set fixed height to start animation
+          guestsSection.style.height = height + 'px';
+          
+          // Trigger reflow
+          guestsSection.offsetHeight;
+          
+          // Add collapsed class to animate to 0 height
+          guestsSection.classList.add('collapsed');
         } else {
-          guestsSection.style.display = 'block';
+          // Remove collapsed class first
+          guestsSection.classList.remove('collapsed');
+          
+          // Get the height of the fully expanded element
+          const fullHeight = guestsSection.scrollHeight;
+          
+          // Set to 0 height to start from collapsed state
+          guestsSection.style.height = '0px';
+          
+          // Trigger reflow
+          guestsSection.offsetHeight;
+          
+          // Add collapsing class for transition
+          guestsSection.classList.add('collapsing');
+          
+          // Remove collapsed class and set to full height
+          guestsSection.style.height = fullHeight + 'px';
+          
+          // After animation completes, remove fixed height
+          setTimeout(() => {
+            if (!guestsSection.classList.contains('collapsed')) {
+              guestsSection.style.height = '';
+              guestsSection.classList.remove('collapsing');
+            }
+          }, 300);
         }
       });
     });
-    
-    // Initialize on page load
-    if (document.querySelector('input[name="attendance"]:checked').value === 'not-attending') {
-      document.querySelector('.guests-section').style.display = 'none';
-    }
     
     document.querySelector('.rsvp-form').addEventListener('submit', async function (e) {
       e.preventDefault();
