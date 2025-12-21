@@ -41,33 +41,52 @@
       const value = this.value;
       document.querySelector('.guests-count').textContent = toPersianDigits(value) + ': تعداد انتخاب شده';
     });
+
+        // Handle radio button changes to show/hide guest count section
+    document.querySelectorAll('input[name="attendance"]').forEach(radio => {
+      radio.addEventListener('change', function() {
+        const guestsSection = document.querySelector('.guests-section');
+        if (this.value === 'not-attending') {
+          guestsSection.style.display = 'none';
+        } else {
+          guestsSection.style.display = 'block';
+        }
+      });
+    });
+    
+    // Initialize on page load
+    if (document.querySelector('input[name="attendance"]:checked').value === 'not-attending') {
+      document.querySelector('.guests-section').style.display = 'none';
+    }
+    
     document.querySelector('.rsvp-form').addEventListener('submit', async function (e) {
       e.preventDefault();
 
-    const data = {
-      attendance: document.querySelector('input[name="attendance"]:checked').value,
-      guests: document.querySelector('.guests-section').style.display === 'none'
-        ? 0
-        : document.querySelector('.guests-slider').value,
-      full_name: document.querySelector('input[name="full_name"]').value.trim(),
-      message: document.querySelector('textarea[name="message"]').value.trim()
-    };
+      const data = {
+        attendance: document.querySelector('input[name="attendance"]:checked').value,
+        guests: document.querySelector('.guests-section').style.display === 'none'
+          ? 0
+          : document.querySelector('.guests-slider').value,
+        full_name: document.querySelector('input[name="full_name"]').value.trim(),
+        message: document.querySelector('textarea[name="message"]').value.trim()
+      };
+      console.log(JSON.stringify(data))
 
-    const res = await fetch('http://localhost:3000/api/rsvp', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
+      const res = await fetch('http://localhost', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
 
-    if (res.ok) {
-      alert('اطلاعات شما با موفقیت ارسال شد. متشکریم!');
-      this.reset();
+      if (res.ok) {
+        alert('اطلاعات شما با موفقیت ارسال شد. متشکریم!');
+        this.reset();
+        document.querySelector('.guests-section').style.display = 'block';
+      } else {
+        alert('خطا در ارسال اطلاعات');
+      }
+
+      // Reset the display of guests section if needed
       document.querySelector('.guests-section').style.display = 'block';
-    } else {
-      alert('خطا در ارسال اطلاعات');
-    }
-    
-    // Reset the display of guests section if needed
-    document.querySelector('.guests-section').style.display = 'block';
-    document.querySelector('input[name="attendance"][value="attending"]').checked = true;
-  });
+      document.querySelector('input[name="attendance"][value="attending"]').checked = true;
+    });

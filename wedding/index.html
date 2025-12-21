@@ -10,9 +10,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="icon" type="image/svg+xml" href="src/icon.svg">
   <link rel="stylesheet" href="style.css">
-  <script src="script.js"></script>
-  </head>
-  <body>
+</head>
+<body>
   <div class="flower-bordertop"><img src="src\top.png"></div>
   <div class="flower-borderbottom"><img src="src\bottom.png"></div>
   <div class="container">
@@ -52,10 +51,10 @@
       </div>
     </section>
         <!-- RSVP Section -->
-    <section id="rsvp">
-      <div class="rsvp-container">
-        <h2 class="rsvp-title">لطفا امکان حضور خود را <span>تا ۱۰ بهمن</span> به اطلاع ما برسانید</h2>
-        <form class="rsvp-form">
+        <section id="rsvp">
+          <div class="rsvp-container">
+            <h2 class="rsvp-title">لطفا امکان حضور خود را <span>تا ۱۰ بهمن</span> به اطلاع ما برسانید</h2>
+            <form class="rsvp-form">
           <div class="rsvp-option">
             <input type="radio" id="attending" name="attendance" value="attending" checked>
             <label for="attending">حضور خواهم/خواهیم داشت</label>
@@ -72,11 +71,11 @@
           </div>
           
           <div class="name-section">
-            <input type="text" class="name-input" dir="rtl" placeholder="* نام و نام خانوادگی" required>
+            <input type="text" name="full_name" class="name-input" dir="rtl" placeholder="* نام و نام خانوادگی" required>
           </div>
           
           <div class="message-section">
-            <textarea class="message-area" dir="rtl"    placeholder="(اختیاری) پیغام"></textarea>
+            <textarea class="message-area" name="message" dir="rtl" placeholder="(اختیاری) پیغام"></textarea>
           </div>
           
           <button type="submit" class="rsvp-submit">ارسال</button>
@@ -116,4 +115,5 @@
     </footer>
   </div>
 </body>
+<script src="script.js"></script>
 </html>
