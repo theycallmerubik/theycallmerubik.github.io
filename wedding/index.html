@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wedding Invitation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Great+Vibes&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Gulzar&family=Noto+Naskh+Arabic:wght@400..700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="icon" type="image/svg+xml" href="src/icon.svg">
+  <link rel="stylesheet" href="style.css">
+  <link rel="script" href="script.js">
+</head>
+<body>
+  <div class="flower-bordertop"><img src="src\top.png"></div>
+  <div class="flower-borderbottom"><img src="src\bottom.png"></div>
+  <div class="container">
+    <!-- Names Section with Background Image -->
+    <section class="names-section">
+      <div class="couple-names">Mansoure</div>
+      <div class="and-symbol">&</div>
+      <div class="couple-names">Mohammad Ali</div>
+    </section>
+    <!-- Countdown Section -->
+    <section id="countdown">
+      <div class="countdown-container">
+        <div id="timer">
+          <div>۰۰<span>روز</span></div>
+          <div>۰۰<span>ساعت</span></div>
+          <div>۰۰<span>دقیقه</span></div>
+          <div>۰۰<span>ثانیه</span></div>
+        </div>
+      </div>
+    </section>
+    <!-- Gallery Section -->
+    <section id="gallery">
+      <h2>گالری عکس های ما</h2>
+      <div class="diamond-gallery">
+        <div class="diamond">
+          <img src="src\dmd1.jpg" alt="Wedding Photo">
+        </div>
+        <div class="diamond">
+          <img src="src\dmd2.jpg" alt="Wedding Photo">
+        </div>
+        <div class="diamond">
+          <img src="src\dmd3.jpg" alt="Wedding Photo">
+        </div>
+        <div class="diamond">
+          <img src="src\dmd4.jpg" alt="Wedding Photo">
+        </div>
+      </div>
+    </section>
+        <!-- RSVP Section -->
+    <section id="rsvp">
+      <div class="rsvp-container">
+        <h2 class="rsvp-title">لطفا امکان حضور خود را <span>تا ۱۰ بهمن</span> به اطلاع ما برسانید</h2>
+        <form class="rsvp-form">
+          <div class="rsvp-option">
+            <input type="radio" id="attending" name="attendance" value="attending" checked>
+            <label for="attending">حضور خواهم/خواهیم داشت</label>
+          </div>
+          <div class="rsvp-option">
+            <input type="radio" id="not-attending" name="attendance" value="not-attending">
+            <label for="not-attending">نمی توانم/نمی توانیم حضور داشته باشم/باشیم</label>
+          </div>
+          
+          <div class="guests-section">
+            <label class="guests-label">تعداد افراد</label>
+            <input type="range" min="1" max="10" value="1" class="guests-slider">
+            <div class="guests-count">۱: تعداد انتخاب شده</div>
+          </div>
+          
+          <div class="name-section">
+            <input type="text" class="name-input" dir="rtl" placeholder="* نام و نام خانوادگی" required>
+          </div>
+          
+          <div class="message-section">
+            <textarea class="message-area" dir="rtl"    placeholder="(اختیاری) پیغام"></textarea>
+          </div>
+          
+          <button type="submit" class="rsvp-submit">ارسال</button>
+        </form>
+      </div>
+    </section>
+    <!-- Location Section with Date and Time -->
+    <section id="location">
+      <div class="location-container">
+        <h2 class="location-title">دیدار ما</h2>
+        <div class="location-info">
+          <div class="info-item">
+            <div class="info-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F5AFAF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days-icon lucide-calendar-days"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg></div>
+            <div class="info-text" dir="rtl">چهارشنبه <span>۱۵</span> بهمن، <span>۱۴۰۴</span> </div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F5AFAF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alarm-clock-icon lucide-alarm-clock"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M5 3 2 6"/><path d="m22 6-3-3"/><path d="M6.38 18.7 4 21"/><path d="M17.64 18.67 20 21"/></svg></div>
+            <div class="info-text" dir="rtl"><span>۷:۳۰</span> الی <span>۱۰:۳۰</span> شب</div>
+          </div>
+          <div class="info-item">
+            <div class="info-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F5AFAF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin-icon lucide-map-pin"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg></div>
+            <div class="info-text" dir="rtl">اراک، دکتر محمد مصدق، بن‌بست پارس ۲، مجتمع پذیرایی پارس</div>
+          </div>
+        </div>
+        <a href="https://nshn.ir/9e_brrHOyB4KeT" target="_blank" class="location-btn">مسیر یابی</a>
+      </div>
+    </section>
+    <!-- Footer Section -->
+    <footer class="footer">
+      <div class="footer-content">
+        <h4>به سنت عشق گرد هم می آییم</h4>
+        <p>آنجا که دوست داشتن تنها کلام زندگی است</p>
+        <div class="copyright">
+          &copy; made with 🩵 by <a href="https://t.me/Ru_Bic">@Ru_Bic</a>.
+        </div>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
