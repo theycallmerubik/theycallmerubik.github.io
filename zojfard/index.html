@@ -1,123 +1,122 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Time & Date — ZojFard Timekeeper</title>
-  <meta name="description" content="A glassmorphism clock with switchable Jalali and Gregorian dates." />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Vazirmatn:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="./styles.css" />
+  <title>Zoj-Fard TimeKeeper</title>
+  <meta name="description" content="Ultra modern Jalali/Gregorian clock and date dashboard in one HTML file." />
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.5.1/snap.svg-min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jalaali-js/dist/jalaali.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./styles.css" />
 </head>
+
 <body>
   <div class="aurora" aria-hidden="true">
-    <span class="orb orb-a"></span>
-    <span class="orb orb-b"></span>
-    <span class="orb orb-c"></span>
+    <span class="orb one"></span>
+    <span class="orb two"></span>
+    <span class="orb three"></span>
   </div>
+  <div class="noise" aria-hidden="true"></div>
+  <div class="particles" id="particles" aria-hidden="true"></div>
 
-  <main class="shell">
-    <!-- LEFT: analog clock -->
-    <section class="panel panel-clock" aria-label="Analog clock">
-      <div class="clock-wrap">
-        <svg id="clock" viewBox="0 0 142 142" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <radialGradient id="dial" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="rgba(124,92,255,0.22)" />
-              <stop offset="60%" stop-color="rgba(26,33,72,0.55)" />
-              <stop offset="100%" stop-color="rgba(11,16,38,0.85)" />
-            </radialGradient>
-            <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="rgba(230,233,255,0.55)" />
-              <stop offset="100%" stop-color="rgba(124,92,255,0.15)" />
-            </linearGradient>
-          </defs>
+  <main class="app">
+    <section class="card clock-card" aria-label="ساعت آنالوگ و دیجیتال">
+      <div class="clock-stage">
+        <div class="clock">
+          <svg viewBox="0 0 200 200" role="img" aria-label="Analog clock">
+            <defs>
+              <linearGradient id="ringGradient" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0%" stop-color="#8b5cf6"/>
+                <stop offset="50%" stop-color="#22d3ee"/>
+                <stop offset="100%" stop-color="#34d399"/>
+              </linearGradient>
+            </defs>
 
-          <!-- dial -->
-          <circle cx="71" cy="71" r="69" fill="url(#dial)" stroke="url(#ring)" stroke-width="1.2" />
-          <circle cx="71" cy="71" r="62" fill="none" stroke="rgba(230,233,255,0.08)" stroke-width="0.6" />
+            <circle cx="100" cy="100" r="92" fill="none" stroke="url(#ringGradient)" stroke-width="1.4" opacity=".72"/>
+            <circle cx="100" cy="100" r="78" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
 
-          <!-- tick marks -->
-          <g id="ticks" stroke="rgba(230,233,255,0.5)" stroke-linecap="round"></g>
+            <g id="ticks"></g>
 
-          <!-- hour hand -->
-          <g id="handH">
-            <rect x="69.6" y="32" width="2.8" height="42" rx="1.4" fill="#e6e9ff" />
-            <text id="handTextH" x="71" y="40" text-anchor="middle" font-size="0" fill="transparent">H</text>
-          </g>
-          <!-- minute hand -->
-          <g id="handM">
-            <rect x="70.1" y="20" width="1.8" height="54" rx="0.9" fill="#e6e9ff" />
-            <text id="handTextM" x="71" y="26" text-anchor="middle" font-size="0" fill="transparent">M</text>
-          </g>
-          <!-- second hand -->
-          <g id="handS">
-            <rect x="70.55" y="14" width="0.9" height="62" fill="#7c5cff" />
-            <circle cx="71" cy="80" r="3" fill="#7c5cff" />
-            <text id="handTextS" x="71" y="18" text-anchor="middle" font-size="0" fill="transparent">S</text>
-          </g>
+            <text x="100" y="38" text-anchor="middle" fill="currentColor" opacity=".75" font-size="10" font-family="JetBrains Mono">XII</text>
+            <text x="162" y="104" text-anchor="middle" fill="currentColor" opacity=".75" font-size="10" font-family="JetBrains Mono">III</text>
+            <text x="100" y="169" text-anchor="middle" fill="currentColor" opacity=".75" font-size="10" font-family="JetBrains Mono">VI</text>
+            <text x="38" y="104" text-anchor="middle" fill="currentColor" opacity=".75" font-size="10" font-family="JetBrains Mono">IX</text>
 
-          <circle cx="71" cy="71" r="2.4" fill="#0b1026" stroke="#e6e9ff" stroke-width="0.6" />
-        </svg>
-      </div>
+            <line id="hourHand" class="hand hand-hour" x1="100" y1="100" x2="100" y2="61"/>
+            <line id="minuteHand" class="hand hand-minute" x1="100" y1="100" x2="100" y2="43"/>
+            <line id="secondHand" class="hand hand-second" x1="100" y1="112" x2="100" y2="31"/>
 
-      <div class="digital">
-        <span class="displayH">00</span><span class="sep">:</span><span class="displayM">00</span><span class="sep">:</span><span class="displayS">00</span>
+            <circle cx="100" cy="100" r="7.5" class="pin"/>
+            <circle cx="100" cy="100" r="3.2" fill="#fb7185"/>
+          </svg>
+
+        </div>
+        <div class="digital-pod">
+          <div class="digital">
+            <span id="hh">00</span><span class="colon">:</span><span id="mm">00</span><span class="colon">:</span><span id="ss">00</span>
+          </div>
+          <div class="mini-row">
+            <span id="ampm">24H</span>
+            <span>•</span>
+            <span id="timezone">Local</span>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- RIGHT: info + controls -->
-    <section class="panel panel-info" aria-label="Date">
-      <header class="bar">
+    <section class="card info-card" aria-label="تاریخ و کنترل‌ها">
+      <header class="topbar">
         <div class="brand">
-          <span class="dot"></span>
-          <span>Zoj-Fard TimeKeeper</span>
-        </div>
-        <div class="controls">
-          <button class="swap" type="button" aria-label="Switch calendar">
-            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-              <path fill="currentColor" d="M7 7h10l-2-2 1.4-1.4L20.8 8l-4.4 4.4L15 11l2-2H7V7zm10 10H7l2 2-1.4 1.4L3.2 16l4.4-4.4L9 13l-2 2h10v2z"/>
-            </svg>
-            <span>Swap</span>
-          </button>
-          <div class="mode" role="switch" aria-label="Toggle theme">
-            <button type="button" aria-label="Theme toggle"></button>
+          <div class="brand-title">
+            <strong>Zoj-Fard TimeKeeper</strong>
           </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn" id="calendarBtn" type="button">تقویم: شمسی</button>
+          <button class="btn" id="formatBtn" type="button">۲۴ ساعته</button>
+          <button class="btn" id="themeBtn" type="button">لایت/دارک</button>
         </div>
       </header>
 
-      <div class="date-card">
-        <div class="weekday-row">
-          <span class="label">Today</span>
-          <span id="weekday" class="weekday">Saturday</span>
+      <section class="hero-date">
+        <div>
+          <div class="kicker" id="todayLabel">امروز</div>
+          <h1 class="weekday" id="weekday">شنبه</h1>
         </div>
 
-        <div id="date" class="date-grid">00 00 00 00</div>
+        <div class="date-grid" id="dateGrid">
+          <div class="date-cell" data-label="قرن">00</div>
+          <div class="date-cell" data-label="سال">00</div>
+          <div class="date-cell" data-label="ماه">00</div>
+          <div class="date-cell" data-label="روز">00</div>
+        </div>
 
-        <div class="meta">
-          <div class="meta-item">
-            <span class="label">Week</span>
-            <span id="week-type" class="value">Odd</span>
+        <div class="stats">
+          <div class="stat">
+            <span>هفته</span>
+            <strong id="weekType">فرد</strong>
           </div>
-          <div class="meta-item">
-            <span class="label">Calendar</span>
-            <span id="calendar-name" class="value">Jalali</span>
+          <div class="stat">
+            <span>تقویم</span>
+            <strong id="calendarName">شمسی</strong>
+          </div>
+          <div class="stat">
+            <span>روز سال</span>
+            <strong id="dayOfYear">000</strong>
           </div>
         </div>
-      </div>
+      </section>
 
-      <footer class="foot">
-        <span>Made with <span class="heart">♥</span></span>
-        <span class="sig"><a href="https://Ru-Bic.ir" target="_blank">Rubik</a> · <a href="https://t.me/icy_Tick">Icy</a></span>
+      <footer class="footer">
+        <span>Made with <span class="heart">♥</span> for a next-level timekeeper</span>
+        <span><a href="https://Ru-Bic.ir" target="_blank" rel="noreferrer">Rubik</a> · <a href="https://t.me/icy_Tick" target="_blank" rel="noreferrer">Icy</a></span>
       </footer>
     </section>
   </main>
-
   <script src="./script.js"></script>
 </body>
 </html>
